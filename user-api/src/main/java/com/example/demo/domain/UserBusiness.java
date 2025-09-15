@@ -1,57 +1,59 @@
-package com.example.demo;
+package com.example.demo.domain;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
 
+import com.example.demo.controller.dto.NewUserDTO;
+import com.example.demo.domain.stereotype.Business;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.entity.Profile;
+import com.example.demo.repository.entity.Role;
+import com.example.demo.repository.entity.User;
 
-@RestController
-@RequestMapping("/api/v1/users")
-public class UserController {
+import jakarta.validation.Valid;
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private BCryptPasswordEncoder passwordEncoder;
-    private Set<String> defaultRoles;
+// Spring -> possui um container de Injeção de Dependências
 
-    public UserController(
-            UserRepository userRepository, 
-            RoleRepository roleRepository,
-            @Value("${app.user.default.roles}") Set<String> defaultRoles) {
+// estereótipo
+@Business // Domain, DomainService, Service, UseCase
+@Validated
+public class UserBusiness {
 
+    private final BCryptPasswordEncoder passwordEncoder = 
+        new BCryptPasswordEncoder();
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final Set<String> defaultRoles;
+
+    public UserBusiness(
+        UserRepository userRepository,
+        RoleRepository roleRepository,
+        @Value("${app.user.default.roles}")
+        Set<String> defaultRoles
+    ) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;   
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.roleRepository = roleRepository;
         this.defaultRoles = defaultRoles;
     }
     
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void newUser(@RequestBody NewUser newUser) {
+    // cadastrar usuário é um use case (é uma feature)
+    public void cadastrarUsuario(@Valid NewUserDTO newUser) {
+        // if (newUser.email() == null || newUser.password() == null) {
+        //     throw new IllegalArgumentException("Email e senha são obrigatórios");
+        // }
 
-        if (newUser.email() == null || newUser.password() == null) {
-            throw new IllegalArgumentException("Email e senha são obrigatórios");
-        }
+        // if (newUser.email().isEmpty() || newUser.password().isEmpty()) {
+        //     throw new IllegalArgumentException("Email e senha não podem estar vazios");
+        // }
 
-        if (newUser.email().isEmpty() || newUser.password().isEmpty()) {
-            throw new IllegalArgumentException("Email e senha não podem estar vazios");
-        }
-
-        if (!newUser.email().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new IllegalArgumentException("Email não é válido");
-        }
+        // if (!newUser.email().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        //     throw new IllegalArgumentException("Email não é válido");
+        // }
 
         if (!newUser.password().matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$")) {
             throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres e conter pelo menos uma letra e um número");
@@ -108,10 +110,5 @@ public class UserController {
             handle = parts[0] + i++;
         }
         return handle;
-    }
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
     }
 }

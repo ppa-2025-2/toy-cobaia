@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.repository.entity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +15,18 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+// Banco de Dados -> Entidade
+// POO: Programação Orientada a Objetos (POO)
+// Entidade: objeto que tem IDENTIDADE (muda com o tempo
+// O/R M: Object/Relational Mapping
+// Mapeamento Objeto/Relacional
+// Problema da Diferença de Representação
+// Impedance Mismatch (diferença de impedância)
+// Entity: DDD (Domain-Driven Design)
 
-@Entity
+// <<entidade>> -> stereotype -> estereótipo
+// Entity -> Metadata
+@Entity // anotação/annotation
 @Table(name = "users")
 public class User {
 

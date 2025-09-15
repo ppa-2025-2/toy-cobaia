@@ -21,3 +21,19 @@ Content-Type: application/json
     ],
     "company": "potato inc"
 }
+
+### Post an invalid user
+
+POST /api/v1/users HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "password": "1234RT56",
+    "handle": "papas",
+    "name": "Kartofel",
+    "roles": [
+        "ROLE_USER"
+    ],
+    "company": "potato inc"
+}
