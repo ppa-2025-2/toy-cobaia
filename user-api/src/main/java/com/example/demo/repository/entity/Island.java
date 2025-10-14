@@ -2,6 +2,7 @@ package com.example.demo.repository.entity;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -112,6 +113,17 @@ public class Island extends BaseEntity {
         + ", createdAt=" + createdAt 
         + ", updatedAt=" + updatedAt 
         + "]";
+    }
+
+    public Optional<Workstation> firstAvailableWorkstation() {
+        return this.workstations.stream()
+            .filter(w -> w.getUser() == null)
+            .findFirst();
+    }
+
+    public void assignUserToTheFirstWorkstationAvailable(User user) {
+        firstAvailableWorkstation()
+                .ifPresent(w -> w.setUser(user));
     }
 
     

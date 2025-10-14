@@ -25,6 +25,18 @@ public class Workstation extends BaseEntity {
     @JoinColumn(name = "island_id")
     private Island island;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String getId() {
         return id;
     }

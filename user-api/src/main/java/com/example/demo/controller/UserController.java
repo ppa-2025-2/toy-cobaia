@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.controller.dto.NewUserDTO;
-import com.example.demo.domain.UserBusiness;
+import com.example.demo.domain.UserService;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.entity.User;
 
@@ -22,11 +22,11 @@ import com.example.demo.repository.entity.User;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private UserBusiness userBusiness;
+    private UserService userBusiness;
     private UserRepository userRepository;
 
     public UserController(
-            UserBusiness userBusiness,
+            UserService userBusiness,
             UserRepository userRepository
         ) {
         this.userBusiness = userBusiness;
@@ -41,6 +41,7 @@ public class UserController {
         // O Controller delega para o Domain Business
         userBusiness.cadastrarUsuario(newUser);
     }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUsers() {

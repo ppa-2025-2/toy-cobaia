@@ -143,3 +143,20 @@ Ilhas (Island) de trabalho
     Mesa pair, square, rectangle, triangle
     Workstation (estação de trabalho)
 
+Object/Relational Mapping => se aplica à bases de dados relacionais
+Object/Document Mapping => se aplica à bases orientadas a documentos
+
+TABELA <=> CLASSE
+REGISTRO <=> INSTÂNCIA
+PROJEÇÃO (PARCIAL) <=> INTERFACE E COLEÇÃO ESPECÍFICA
+RELACIONAMENTOS (PK/FK) <=> AGREGAÇÃO E COMPOSIÇÃO
+
+ARQUITETURA DE ORM MAIS COMUNS
+- Baseadas em Unit of Work/Repositories
+- Baseadas em Active Record (registro ativo) Ex.: Ruby on Rails Active Record
+
+O Spring (Spring Data JPA) abstrai o Unit of Work (Entity Manager) usando a interface de Repositories.
+
+Metaprogramação: são programas que criam programas.
+
+https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html

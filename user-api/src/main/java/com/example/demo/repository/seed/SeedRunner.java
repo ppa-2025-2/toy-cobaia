@@ -1,6 +1,7 @@
 package com.example.demo.repository.seed;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.ApplicationArguments;
@@ -28,20 +29,26 @@ public class SeedRunner implements ApplicationRunner  {
 
         inserirIlhaWorkstation();
 
-        Optional<Island> op = repo.findById(1L);
+        List<Island> islands = repo.findIslandWithAvailableWorkstations();
 
+        System.out.println("ISLANDS===========================");
+        System.out.println(islands);
 
-        if (op.isPresent()) {
-            var island = op.get();
-
-            // island.getWorkstations();
-
-            island.removeWorkstations(
-                    ws -> ws.getId().equals("WS1"));
-            
-            repo.save(island);
-        }
-
+        /*
+         * Optional<Island> op = repo.findById(1L);
+         * 
+         * 
+         * if (op.isPresent()) {
+         * var island = op.get();
+         * 
+         * // island.getWorkstations();
+         * 
+         * island.removeWorkstations(
+         * ws -> ws.getId().equals("WS1"));
+         * 
+         * repo.save(island);
+         * }
+         */
     }
 
     private void inserirIlhaWorkstation() {

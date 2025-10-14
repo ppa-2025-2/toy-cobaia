@@ -3,6 +3,9 @@ package com.example.demo.repository.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,10 +40,13 @@ public class User {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 255)
+    // baixa coesão
+    @JsonProperty(value = "username") // payload
+    @Column(nullable = false, unique = true, length = 255) // banco
     private String handle;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
