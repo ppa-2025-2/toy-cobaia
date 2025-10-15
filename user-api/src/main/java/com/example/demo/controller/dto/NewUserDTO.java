@@ -14,12 +14,10 @@ import java.util.List;
 import org.hibernate.validator.constraints.Length;
 
 import com.example.demo.repository.entity.Profile;
-import com.example.demo.repository.entity.Profile.AccountType;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 public record NewUserDTO(
         @NotNull(message = "O nome é obrigatório")

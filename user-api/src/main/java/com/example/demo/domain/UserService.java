@@ -1,9 +1,7 @@
 package com.example.demo.domain;
 
-import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 
 import com.example.demo.controller.dto.NewUserDTO;
 import com.example.demo.domain.exceptions.NotFoundException;
-import com.example.demo.domain.stereotype.Business;
 import com.example.demo.repository.IslandRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
@@ -22,6 +19,7 @@ import com.example.demo.repository.entity.Island;
 import com.example.demo.repository.entity.Profile;
 import com.example.demo.repository.entity.Role;
 import com.example.demo.repository.entity.User;
+import com.example.demo.repository.entity.Workstation;
 
 import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
@@ -34,7 +32,10 @@ import jakarta.validation.Valid;
 public class UserService {
 
     private final IslandRepository islandRepository;
+    
+    @SuppressWarnings("unused")
     private final EntityManager em;
+    
     private final BCryptPasswordEncoder passwordEncoder = 
         new BCryptPasswordEncoder();
     private final UserRepository userRepository;
@@ -61,55 +62,48 @@ public class UserService {
 
     public void alocarWorkstationDisponivel(@NonNull Integer userId) {
         
-        final User user = userRepository.findById(userId)
+        final var user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException());
 
         // POO: agregação vs composição (aggregation vs composition)
-        final List<Island> islands = islandRepository.findIslandWithAvailableWorkstations();
+        final var islands = islandRepository.findIslandWithAvailableWorkstations();
 
         if (islands.isEmpty()) {
             throw new IllegalStateException("Workstations not available");
         }
 
-        // i1 square 2/4
-        // i2 triangular 2/3
-        // i3 rectangular 1/6
+        // island 0 square 2/4
+        // island 1 triangular 2/3
+        // island 3 rectangular 1/6
 
         // busca ilhas começando por uma ws livre, depois duas, ...
-        Island livre; 
-        for (int lugares = 1; ; lugares++) {
-            final int positions = lugares;
-            Optional<Island> possibleIsland =  islands.stream().filter(i -> i.getWorkstations()
-                    .stream()
-                    .filter(w -> w.getUser() == null)
-                    .count() == positions).findFirst();
+        Island freeIsland = islands.getFirst(); 
+        for (int slots = 1; slots < Island.Disposition.CIRCULAR.getPlacements(); slots++) {
+            final int positions = slots;
+            var possibleIsland = islands.stream()
+                .filter(i -> i.getWorkstations().stream()
+                            .map(Workstation::getUser)
+                            .filter(Objects::nonNull)
+                            .count() == positions)
+                .findFirst();
             if (possibleIsland.isPresent()) {
-                livre = possibleIsland.get();
+                freeIsland = possibleIsland.get();
                 break;
             }
         }
+
         // primeira workstation livre e seta o usuário
-        livre.getWorkstations().stream().filter(w -> w.getUser() == null)
-            .findFirst().ifPresent(w -> w.setUser(user));
+        freeIsland.getWorkstations().stream()
+            .filter(ws -> ws.getUser() == null)
+            .findFirst()
+            .ifPresent(ws -> ws.setUser(user));
 
-        islandRepository.save(livre);
-
+        islandRepository.save(freeIsland);
     }
     
     // cadastrar usuário é um use case (é uma feature)
     public void cadastrarUsuario(@Valid NewUserDTO newUser) {
-        // if (newUser.email() == null || newUser.password() == null) {
-        //     throw new IllegalArgumentException("Email e senha são obrigatórios");
-        // }
-
-        // if (newUser.email().isEmpty() || newUser.password().isEmpty()) {
-        //     throw new IllegalArgumentException("Email e senha não podem estar vazios");
-        // }
-
-        // if (!newUser.email().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-        //     throw new IllegalArgumentException("Email não é válido");
-        // }
-
+ 
         if (!newUser.password().matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$")) {
             throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres e conter pelo menos uma letra e um número");
         }
