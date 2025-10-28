@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
-import com.example.demo.repository.entity.Island;
-import com.example.demo.repository.entity.Island.Disposition;
+import com.example.demo.domain.Island;
+import com.example.demo.domain.Island.Disposition;
 
 public interface IslandRepository 
     extends ListCrudRepository<Island, Long> {

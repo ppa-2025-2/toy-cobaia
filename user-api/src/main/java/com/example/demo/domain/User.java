@@ -1,4 +1,4 @@
-package com.example.demo.repository.entity;
+package com.example.demo.domain;
 
 import java.util.HashSet;
 import java.util.Set;

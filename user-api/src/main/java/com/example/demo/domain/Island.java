@@ -1,9 +1,11 @@
-package com.example.demo.repository.entity;
+package com.example.demo.domain;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+
+import com.example.demo.repository.entity.BaseEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -118,9 +120,16 @@ public class Island extends BaseEntity {
             .findFirst();
     }
 
-    public void assignUserToTheFirstWorkstationAvailable(User user) {
+    public Island assignUserToTheFirstWorkstationAvailable(User user) {
         firstAvailableWorkstation()
-                .ifPresent(w -> w.setUser(user));
+                .ifPresent(w -> w.assignUser(user));
+        return this;
+    }
+
+    public Optional<Workstation> getFirstAvailableWorkstation() {
+        return this.getWorkstations().stream()
+                .filter(ws -> ws.getUser() == null)
+                .findFirst();
     }
 
     

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.repository.ListCrudRepository;
 
-import com.example.demo.repository.entity.Role;
+import com.example.demo.domain.Role;
 
 public interface RoleRepository extends ListCrudRepository<Role, Integer> {
 

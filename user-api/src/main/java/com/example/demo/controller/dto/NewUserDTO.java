@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.example.demo.repository.entity.Profile;
+import com.example.demo.domain.Profile;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

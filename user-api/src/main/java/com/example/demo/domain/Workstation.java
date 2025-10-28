@@ -1,4 +1,6 @@
-package com.example.demo.repository.entity;
+package com.example.demo.domain;
+
+import com.example.demo.repository.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,10 +30,6 @@ public class Workstation extends BaseEntity {
 
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getId() {
@@ -93,7 +91,11 @@ public class Workstation extends BaseEntity {
         return true;
     }
 
-    // equals e o hashCode
-    // CTRL+P, CTRL+SHIFT+P, CTRL+ESPAÇO, CTRL+. (code assist)
-    
+    public void assignUser(User user) {
+        if (this.user == null) this.user = user;
+        else throw new WorkstationNotAvailableException();
+    }
+
+    public class WorkstationNotAvailableException
+            extends RuntimeException {};
 }

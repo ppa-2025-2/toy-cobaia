@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
-import com.example.demo.repository.entity.User;
+import com.example.demo.domain.User;
 
 public interface UserRepository extends ListCrudRepository<User, Integer> {
     // JPQL Java Persistence Query Language

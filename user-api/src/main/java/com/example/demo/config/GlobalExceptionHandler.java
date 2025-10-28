@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.example.demo.domain.exceptions.NotFoundException;
+import com.example.demo.application.exceptions.NotFoundException;
 
 import jakarta.validation.ConstraintViolationException;
 

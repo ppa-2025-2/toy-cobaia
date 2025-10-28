@@ -7,10 +7,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.domain.Island;
+import com.example.demo.domain.Workstation;
+import com.example.demo.domain.Island.Disposition;
 import com.example.demo.repository.IslandRepository;
-import com.example.demo.repository.entity.Island;
-import com.example.demo.repository.entity.Island.Disposition;
-import com.example.demo.repository.entity.Workstation;
 
 @Component
 public class SeedRunner implements ApplicationRunner  {
