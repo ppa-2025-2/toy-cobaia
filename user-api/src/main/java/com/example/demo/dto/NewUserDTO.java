@@ -1,13 +1,4 @@
-package com.example.demo.controller.dto;
-
-/*
- * -- C -> Mother of All Languages
- * -- Turing Complete Language
- * -- LINGUAGEM DECLARATIVA (linguagem de pedidos)
- * CREATE TABLE users (
- *      name VARCHAR(20) NOT NULL CHECK LEN(name) >= 3 
- * )
- */
+package com.example.demo.dto;
 
 import java.util.List;
 

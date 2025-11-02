@@ -1,8 +1,11 @@
 package com.example.demo.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.management.Notification;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
@@ -10,8 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.example.demo.controller.dto.NewUserDTO;
+import com.example.demo.dto.NewUserDTO;
 import com.example.demo.domain.exceptions.NotFoundException;
+import com.example.demo.domain.exceptions.NotificationSubsystemUnavailableException;
+import com.example.demo.dto.NotificationDTO;
 import com.example.demo.repository.IslandRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
@@ -22,12 +27,10 @@ import com.example.demo.repository.entity.User;
 import com.example.demo.repository.entity.Workstation;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
-// Spring -> possui um container de Injeção de Dependências
-
-// estereótipo
-@Service // Domain, DomainService, Service, UseCase
+@Service
 @Validated
 public class UserService {
 
@@ -42,23 +45,24 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final Set<String> defaultRoles;
 
+    private NotificationFacade notificationService;
+
     public UserService(
         IslandRepository islandRepository,
         EntityManager em,
         UserRepository userRepository,
         RoleRepository roleRepository,
         @Value("${app.user.default.roles}")
-        Set<String> defaultRoles
+        Set<String> defaultRoles,
+        NotificationFacade notification
     ) {
         this.islandRepository = islandRepository;
         this.em = em;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.defaultRoles = defaultRoles;
+        this.notificationService = notification;
     }
-
-    // Application Service, interface entre o serviço e o domínio
-    // Domain Service, ele é o próprio domínio
 
     public void alocarWorkstationDisponivel(@NonNull Integer userId) {
         
@@ -72,11 +76,6 @@ public class UserService {
             throw new IllegalStateException("Workstations not available");
         }
 
-        // island 0 square 2/4
-        // island 1 triangular 2/3
-        // island 3 rectangular 1/6
-
-        // busca ilhas começando por uma ws livre, depois duas, ...
         Island freeIsland = islands.getFirst(); 
         for (int slots = 1; slots < Island.Disposition.CIRCULAR.getPlacements(); slots++) {
             final int positions = slots;
@@ -92,7 +91,6 @@ public class UserService {
             }
         }
 
-        // primeira workstation livre e seta o usuário
         freeIsland.getWorkstations().stream()
             .filter(ws -> ws.getUser() == null)
             .findFirst()
@@ -101,7 +99,7 @@ public class UserService {
         islandRepository.save(freeIsland);
     }
     
-    // cadastrar usuário é um use case (é uma feature)
+    @Transactional(rollbackOn = NotificationSubsystemUnavailableException.class)
     public void cadastrarUsuario(@Valid NewUserDTO newUser) {
  
         if (!newUser.password().matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$")) {
@@ -150,11 +148,12 @@ public class UserService {
 
         userRepository.save(user); 
         
-        // Unit of Work
-        // se não houvesse repositório, usaríamos o EntityManager
-        // em.persist(user);
-        // em.flush();
-        
+        notificationService.sendNotification(
+            new NotificationDTO(user.getEmail(),
+                "Sua conta foi criada",
+                "Parabéns %s, sua conta foi criada com sucesso. Bem-vindo a bordo do nosso espetacular serviço de usuários. lorem ipsum dolor nocet".formatted(user.getProfile().getName()),
+                List.of("mail"))
+        );
     }
 
     private String generateHandle(String email) {

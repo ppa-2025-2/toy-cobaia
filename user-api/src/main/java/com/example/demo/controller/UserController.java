@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.controller.dto.NewUserDTO;
+import com.example.demo.dto.NewUserDTO;
 import com.example.demo.domain.UserService;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.entity.User;
@@ -36,12 +36,8 @@ public class UserController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public void newUser(@RequestBody NewUserDTO newUser) {
-        // O Controller pode ter lógica?
-        // Pode, lógica de controle (roteamento).
-        // O Controller delega para o Domain Business
         userBusiness.cadastrarUsuario(newUser);
     }
-
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUsers() {
