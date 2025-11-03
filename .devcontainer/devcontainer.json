@@ -1,0 +1,56 @@
+{
+	"name": "Java",
+	"image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+
+	"features": {
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "none",
+			"installMaven": "false",
+			"installGradle": "true"
+		},
+		"ghcr.io/warrenbuckley/codespace-features/sqlite:1": {}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"EditorConfig.EditorConfig",
+				"vmware.vscode-boot-dev-pack",
+				"vscjava.vscode-java-pack",
+				"EditorConfig.EditorConfig",
+				"ms-azuretools.vscode-containers",
+				"ms-azuretools.vscode-docker",
+				"redhat.vscode-yaml",
+				"eamodio.gitlens",
+				"whizkydee.material-palenight-theme",
+				"ms-vscode.atom-keybindings",
+				"humao.rest-client",
+				"ms-vscode-remote.remote-containers",
+				"usernamehw.errorlens",
+				"ms-vscode.atom-keybindings"
+			],
+			"settings": {
+				"java.compile.nullAnalysis.mode": "automatic",
+				"git.enableSmartCommit": true,
+				"workbench.iconTheme": "material-icon-theme",
+				"editor.wordWrap": "on",
+				"workbench.sideBar.location": "right",
+				"remote.autoForwardPortsSource": "hybrid",
+				"editor.fontFamily": "JetBrains Mono, Consolas, 'Courier New', monospace",
+				"editor.fontLigatures": true,
+				"[java]": {
+					"editor.defaultFormatter": "redhat.java"
+				},
+				"editor.inlayHints.enabled": "offUnlessPressed",
+				"workbench.colorTheme": "Default Dark Modern",
+				"terminal.integrated.stickyScroll.enabled": false,
+				"editor.stickyScroll.enabled": false,
+				"workbench.colorCustomizations": {
+					"titleBar.activeBackground": "#971a20",
+					"statusBar.background": "#2b7238",
+					"statusBar.foreground": "#ffffff"
+				}
+			}
+		}
+	}
+}
