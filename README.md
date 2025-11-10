@@ -8,3 +8,7 @@ Cobaia Toy Project para experimentar princípios e padrões arquiteturais
 
 Java 21
 Gradle 8.13
+
+## APLICAÇÕES MONOLÍTICAS
+
+Um único BLOCO.
