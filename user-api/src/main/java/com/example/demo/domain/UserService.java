@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import com.example.demo.dto.NewUserDTO;
 import com.example.demo.domain.exceptions.NotFoundException;
 import com.example.demo.domain.exceptions.NotificationSubsystemUnavailableException;
-import com.example.demo.dto.NotificationDTO;
 import com.example.demo.repository.IslandRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
@@ -42,8 +40,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final Set<String> defaultRoles;
-
-    private NotificationFacade notificationService;
+    // Fazer o UserService depender de uma
+    // abstração de notificações
+    private INotificationService notificationService;
 
     public UserService(
         IslandRepository islandRepository,
@@ -52,14 +51,14 @@ public class UserService {
         RoleRepository roleRepository,
         @Value("${app.user.default.roles}")
         Set<String> defaultRoles,
-        NotificationFacade notification
+        INotificationService notificationService
     ) {
         this.islandRepository = islandRepository;
         this.em = em;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.defaultRoles = defaultRoles;
-        this.notificationService = notification;
+        this.notificationService = notificationService;
     }
 
     public void alocarWorkstationDisponivel(@NonNull Integer userId) {
@@ -146,11 +145,12 @@ public class UserService {
 
         userRepository.save(user); 
         
+        // chamar serviços externos diretamente
+        // criar um acoplamento (lógico)
         notificationService.sendNotification(
-            new NotificationDTO(user.getEmail(),
-                "Sua conta foi criada",
-                "Parabéns %s, sua conta foi criada com sucesso. Bem-vindo a bordo do nosso espetacular serviço de usuários. lorem ipsum dolor nocet".formatted(user.getProfile().getName()),
-                List.of("mail"))
+            user.getEmail(),
+            "Sua conta foi criada",
+            "Parabéns %s, sua conta foi criada com sucesso. Bem-vindo a bordo do nosso espetacular serviço de usuários. lorem ipsum dolor nocet".formatted(user.getProfile().getName())
         );
     }
 

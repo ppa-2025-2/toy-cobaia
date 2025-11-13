@@ -17,6 +17,7 @@ public class NotificationController {
     private static Logger logger = LoggerFactory
         .getLogger(NotificationController.class.getName());
 
+    // Façade (fachada)
     // uma fachada é um front de objetos mais granulares
     private final NotificationFacade notificationFacade;
 

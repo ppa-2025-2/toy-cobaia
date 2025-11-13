@@ -1,0 +1,13 @@
+
+### Realizar Notificação
+
+POST /api/v1/notification HTTP/1.1
+Host: localhost:8081
+Content-Type: application/json
+
+{
+    "recipient": "teste@mail.com",
+    "title": "Teste do Endpoint",
+    "body": "Se estás lendo essa msg, deu tudo certo \\o/",
+    "media": ["mail"]
+}
